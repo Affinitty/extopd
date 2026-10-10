@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EXTOPD · Student Forms</title>
+  <meta name="description" content="Create student biodata forms from Excel and roll-numbered photos. Search records, preview and download PDFs privately in your browser.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="vendor/xlsx.full.min.js"></script>
+  <script defer src="vendor/jszip.min.js"></script>
+  <script defer src="vendor/html2canvas.min.js"></script>
+  <script defer src="vendor/jspdf.umd.min.js"></script>
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="brandmark">EX</span><span>EXTOPD<small>STUDENT FORMS</small></span></div>
+    <span class="session">Session only <span class="desktop">· Files stay on this device</span></span>
+  </header>
+  <main>
+    <div id="import-view">
+      <div class="heading">
+        <div><p class="eyebrow">STEP 1 OF 2 · IMPORT</p><h1>A form for every student.</h1><p>Import your class list and photos to begin.</p></div>
+        <button id="return-workspace" class="quiet" hidden>Back to students</button>
+      </div>
+      <section class="import-panel" aria-labelledby="import-heading">
+        <div class="section-head"><h2 id="import-heading"><span class="step">01</span> Import class files</h2><span class="muted">Excel + photo ZIP</span></div>
+        <div class="upload-grid">
+          <label class="upload" id="excel-drop"><span class="file-icon">XLS</span><span class="upload-text"><strong>Student spreadsheet</strong><span id="excel-name">Choose or drop an Excel file</span><small>.xlsx or .xls · up to 10 MB</small></span><input id="excel" type="file" accept=".xlsx,.xls" aria-label="Student spreadsheet"></label>
+          <label class="upload" id="zip-drop"><span class="file-icon photo-icon">ZIP</span><span class="upload-text"><strong>Student photos</strong><span id="zip-name">Choose or drop a photo ZIP</span><small>JPG, PNG, WebP · up to 50 MB</small></span><input id="photos" type="file" accept=".zip" aria-label="Student photos ZIP"></label>
+        </div>
+        <div class="import-bottom"><p>Photos auto-match by roll number: <code>1.jpg</code>, <code>1.jpeg</code> or <code>1.png</code> for roll 1. Extra Excel columns are included in the form automatically.</p><button class="primary" id="import" disabled>Import files</button></div>
+        <div id="message" class="status-message" role="status" aria-live="polite"></div>
+      </section>
+      <section id="empty" class="empty"><div class="empty-sheet" aria-hidden="true"><span></span><i></i><i></i><i></i><i></i></div><h2>Your class workspace starts here</h2><p>Upload both files to see students, check their photos,<br class="desktop"> and create individual A4 biodata forms.</p><div class="empty-tags"><span>Gujarati & English</span><span>All spreadsheet fields</span><span>Photo on every form</span></div></section>
+    </div>
+    <div id="workspace-view" hidden>
+      <div class="heading workspace-heading">
+        <div><p class="eyebrow">STEP 2 OF 2 · STUDENT WORKSPACE</p><h1>Your class forms.</h1><p>Find a student, review their form, and download PDFs.</p></div>
+        <div class="view-actions"><button id="change-files" class="quiet">Change files</button><button id="clear" class="quiet">Clear session</button></div>
+      </div>
+      <section id="workspace" hidden>
+        <div class="section-head workspace-head"><h2><span class="step">02</span> Students <span id="count" class="count"></span></h2><div class="download-actions"><button id="download-filtered" class="quiet" hidden>Download filtered</button><button id="download-all" class="primary">Download All</button></div></div>
+        <div id="summary" class="summary"></div>
+        <div id="workspace-message" class="status-message" role="status" aria-live="polite"></div>
+        <details id="issues" class="issues" hidden><summary id="issues-title">Import notes</summary><ul id="issues-list"></ul></details>
+        <div class="work-grid">
+          <section class="directory" aria-label="Student directory">
+            <label class="search-label" for="search">Find a student</label>
+            <input type="search" id="search" placeholder="Search name, roll, village, mobile…">
+            <div class="filters"><select id="attribute" aria-label="Search attribute"><option value="all">All attributes</option></select><select id="photo-filter" aria-label="Photo status"><option value="all">All photos</option><option value="ready">With photo</option><option value="missing">Missing photo</option></select></div>
+            <p id="results" class="muted results" aria-live="polite"></p>
+            <div class="student-scroll"><div id="student-list" tabindex="0" aria-label="Student cards"></div><div id="student-scrollbar" role="scrollbar" tabindex="0" aria-label="Scroll student cards" aria-controls="student-list" aria-orientation="vertical" aria-valuemin="0" aria-valuenow="0" aria-valuemax="0"><span class="scrollbar-thumb"></span></div></div>
+          </section>
+          <section class="preview-panel" aria-labelledby="preview-heading"><div class="preview-head"><div><p class="eyebrow">FORM PREVIEW</p><h3 id="preview-heading">Select a student</h3></div><button id="download" class="primary">Download PDF</button></div><div class="photo-assignment"><label for="assign">Photo for this student</label><select id="assign"></select><p id="photo-note" class="muted"></p></div><div id="preview" class="preview-surface"></div></section>
+        </div>
+      </section>
+    </div>
+    <footer>Student data is processed in this browser only. Refreshing or closing this page clears the session.</footer>
+  </main>
+  <div id="export-root" aria-hidden="true"></div>
+</body>
+</html>
